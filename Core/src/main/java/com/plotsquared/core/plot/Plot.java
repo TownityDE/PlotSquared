@@ -2155,16 +2155,15 @@ public class Plot {
      * @param alias The alias
      */
     public void setAlias(String alias) {
+        if (alias == null) {
+            alias = "";
+        }
         for (Plot current : this.getConnectedPlots()) {
-            String name = this.getSettings().getAlias();
-            if (alias == null) {
-                alias = "";
+            String currentAlias = current.getSettings().getAlias();
+            if (!currentAlias.equals(alias)) {
+                current.getSettings().setAlias(alias);
+                DBFunc.setAlias(current, alias);
             }
-            if (name.equals(alias)) {
-                return;
-            }
-            current.getSettings().setAlias(alias);
-            DBFunc.setAlias(current, alias);
         }
     }
 
