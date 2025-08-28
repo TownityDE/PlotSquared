@@ -65,6 +65,9 @@ public class Alias extends SubCommand {
             return false;
         }
 
+        // Always operate on the base plot to ensure merged plots are handled correctly
+        plot = plot.getBasePlot(false);
+
         if (!plot.hasOwner()) {
             player.sendMessage(TranslatableCaption.of("working.plot_not_claimed"));
             return false;
