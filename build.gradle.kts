@@ -1,6 +1,6 @@
 import com.diffplug.gradle.spotless.SpotlessPlugin
 import com.github.jengelman.gradle.plugins.shadow.ShadowPlugin
-import groovy.json.JsonSlurper
+import xyz.jpenilla.runtask.service.DownloadsAPIService
 import xyz.jpenilla.runpaper.task.RunServer
 
 plugins {
@@ -205,29 +205,23 @@ tasks.getByName<Jar>("jar") {
 }
 
 val supportedVersions = listOf("1.19.4", "1.20.6", "1.21.1", "1.21.3", "1.21.4", "1.21.5", "1.21.6", "1.21.7", "1.21.8")
-tasks {
-    register("cacheLatestFaweArtifact") {
-        val lastSuccessfulBuildUrl = uri("https://ci.athion.net/job/FastAsyncWorldEdit/lastSuccessfulBuild/api/json").toURL()
-        val artifact = ((JsonSlurper().parse(lastSuccessfulBuildUrl) as Map<*, *>)["artifacts"] as List<*>)
-                .map { it as Map<*, *> }
-                .map { it["fileName"] as String }
-                .first { it -> it.contains("Paper") }
-        project.ext["faweArtifact"] = artifact
-    }
+val worldEditVersion = libs.versions.worldedit.get()
 
+tasks {
     supportedVersions.forEach {
-        register<RunServer>("runServer-$it") {
-            dependsOn(getByName("cacheLatestFaweArtifact"))
+        register<RunServer>("runFolia-$it") {
+            downloadsApiService.set(DownloadsAPIService.folia(project))
+            displayName.set("Folia")
             minecraftVersion(it)
             pluginJars(*project(":plotsquared-bukkit").getTasksByName("shadowJar", false)
                     .map { task -> (task as Jar).archiveFile }
                     .toTypedArray())
             jvmArgs("-DPaper.IgnoreJavaVersion=true", "-Dcom.mojang.eula.agree=true")
             downloadPlugins {
-                url("https://ci.athion.net/job/FastAsyncWorldEdit/lastSuccessfulBuild/artifact/artifacts/${project.ext["faweArtifact"]}")
+                url("https://maven.enginehub.org/repo/com/sk89q/worldedit/worldedit-folia/$worldEditVersion/worldedit-folia-$worldEditVersion.jar")
             }
-            group = "run paper"
-            runDirectory.set(file("run-$it"))
+            group = "run folia"
+            runDirectory.set(file("run-folia-$it"))
         }
     }
 }
