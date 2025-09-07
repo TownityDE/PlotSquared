@@ -1,5 +1,9 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
+plugins {
+    alias(libs.plugins.paperweight)
+}
+
 repositories {
     maven {
         name = "PlaceholderAPI"
@@ -23,8 +27,7 @@ dependencies {
     // Metrics
     implementation(libs.bstatsBukkit)
 
-    // Paper
-    compileOnly(libs.paper)
+    // Folia
     implementation(libs.paperlib)
 
     // Plugins
@@ -32,8 +35,6 @@ dependencies {
         exclude(group = "org.bukkit")
         exclude(group = "org.spigotmc")
     }
-    compileOnly(libs.faweBukkit) { isTransitive = false }
-    testImplementation(libs.faweBukkit) { isTransitive = false }
     compileOnly(libs.vault) {
         exclude(group = "org.bukkit")
     }
@@ -55,6 +56,8 @@ dependencies {
 
     // Adventure
     implementation(libs.adventureBukkit)
+
+    paperweight.foliaDevBundle(libs.versions.folia.get())
 }
 
 tasks.processResources {
