@@ -314,19 +314,19 @@ public class BukkitPlayer extends PlotPlayer<Player> {
     public void playMusic(final @NonNull Location location, final @NonNull ItemType id) {
         if (id == ItemTypes.AIR) {
             if (PlotSquared.platform().serverVersion()[1] >= 19) {
-                player.stopSound(SoundCategory.MUSIC);
+                player.stopSound(SoundCategory.AMBIENT);
                 return;
             }
             // 1.18 and downwards require a specific Sound to stop (even tho the packet does not??)
             for (final Sound sound : Sound.values()) {
                 if (sound.name().startsWith("MUSIC_DISC")) {
-                    this.player.stopSound(sound, SoundCategory.MUSIC);
+                    this.player.stopSound(sound, SoundCategory.AMBIENT);
                 }
             }
             return;
         }
         this.player.playSound(BukkitUtil.adapt(location), Sound.valueOf(BukkitAdapter.adapt(id).name()),
-                SoundCategory.MUSIC, Float.MAX_VALUE, 1f
+                SoundCategory.AMBIENT, Float.MAX_VALUE, 1f
         );
     }
 

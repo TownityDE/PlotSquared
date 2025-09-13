@@ -10,6 +10,7 @@ softdepend: [ Vault, PlaceholderAPI, Essentials, LuckPerms, BungeePerms, MVdWPla
 loadbefore: [ MultiWorld, Multiverse-Core ]
 depend: [ WorldEdit ]
 database: false
+folia-support: true
 commands:
   plots:
     description: Plot command.
